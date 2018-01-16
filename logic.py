@@ -18,6 +18,17 @@ class Board:
 					if self.grid[pos.y][pos.x] != ' ':
 						return True
 		return False
+	def toBottom(self,block):
+		shift=Pos(0,0)
+		while not self.collision(block+shift):
+			shift.y=shift.y+1
+	def __add__(self,block:Block):
+		shape=Block.blockShapes[block.blockType][block.rotation]
+		for dy,line in enumerate(shape):
+			for dx,pixel in enumerate(line):
+				pos=Pos(dx,dy)+block.pos
+				if pixel != ' ':
+					self.grid[dy][dx]=pixel
 					
 class Pos:
 	def __init__(self,x,y):
@@ -40,7 +51,7 @@ class Block:
 		'i':blockshapes.i,
 		't':blockshapes.t
 	}
-	def __init__(self,blockType='r',pos=Pos(5,0),rotation=0):
+	def __init__(self,blockType='r',pos=Pos(5,0),rotation=None):
 		self.pos=pos
 
 		if (blockType == 'r'):
@@ -55,6 +66,5 @@ class Block:
 
 	def __add__(self,shift: tuple):
 		return Block(self.blockType,self.pos+shift,self.rotation)
-		
-
-
+	def rotate(self,angle=1):
+		self.rotation=(self.rotation+angle)%4
