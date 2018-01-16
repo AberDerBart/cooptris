@@ -22,13 +22,19 @@ class Board:
 		shift=Pos(0,0)
 		while not self.collision(block+shift):
 			shift.y=shift.y+1
-	def __add__(self,block:Block):
+	def __add__(self,block):
 		shape=Block.blockShapes[block.blockType][block.rotation]
 		for dy,line in enumerate(shape):
 			for dx,pixel in enumerate(line):
 				pos=Pos(dx,dy)+block.pos
 				if pixel != ' ':
-					self.grid[dy][dx]=pixel
+					self.grid[pos.y][pos.x]=pixel
+		return self
+	def print(self):
+		print('+'+'-'*self.width+'+')
+		for line in self.grid:
+			print('|'+''.join(line)+'|')
+		print('+'+'-'*self.width+'+')
 					
 class Pos:
 	def __init__(self,x,y):
