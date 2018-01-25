@@ -17,11 +17,6 @@ class Board:
 					if self.grid[pos.y][pos.x] != ' ':
 						return True
 		return False
-	def toBottom(self,block):
-		shift=Pos(0,1)
-		while not self.collision(block+shift):
-			shift.y=shift.y+1
-		return block+shift+Pos(0,-1)
 	def __add__(self,block):
 		shape=Block.blockShapes[block.blockType][block.rotation]
 		for dy,line in enumerate(shape):
@@ -76,15 +71,23 @@ class Block:
 		if board and board.collision(self):
 			# if rotation is not allowed, rotate back
 			self.rotation=(self.rotation-angle)%4
+			return False
+		return True
 	def shiftLeft(self,board=None):
 		if board and board.collision(self+Pos(-1,0)):
-			return None
+			return False
 		self.pos = self.pos + Pos(-1,0)
+		return True
 	def shiftRight(self,board=None):
 		if board and board.collision(self+Pos(1,0)):
-			return None
+			return False
 		self.pos = self.pos + Pos(1,0)
+		return True
 	def shiftDown(self,board=None):
 		if board and board.collision(self+Pos(0,1)):
-			return None
+			return False
 		self.pos = self.pos + Pos(0,1)
+		return True
+	def toBottom(self,board):
+		while self.shiftDown(board):
+			pass
